@@ -1,0 +1,49 @@
+import { createClient } from '@/lib/supabase/server'
+import { Navbar } from '@/components/navbar'
+import { HeroSection } from '@/components/hero-section'
+import { PratimaSection } from '@/components/pratimai-section'
+import { TreniruotesSection } from '@/components/treniruotes-section'
+import { TvarkarastisSection } from '@/components/tvarkarastis-section'
+import { Footer } from '@/components/footer'
+import type { HeroContent, Exercise, TrainingType, ScheduleSlot } from '@/lib/types'
+
+export default async function HomePage() {
+  const supabase = await createClient()
+
+  const [heroRes, exercisesRes, trainingRes, slotsRes] = await Promise.all([
+    supabase.from('hero_content').select('*').limit(1).single(),
+    supabase.from('exercises').select('*').order('sort_order'),
+    supabase.from('training_types').select('*').order('sort_order'),
+    supabase
+      .from('schedule_slots')
+      .select('*, training_types(name)')
+      .gte('slot_date', new Date().toISOString().split('T')[0])
+      .order('slot_date')
+      .order('start_time'),
+  ])
+
+  const hero = heroRes.data as HeroContent | null
+  const exercises = (exercisesRes.data ?? []) as Exercise[]
+  const trainingTypes = (trainingRes.data ?? []) as TrainingType[]
+  const slots = (slotsRes.data ?? []) as ScheduleSlot[]
+
+  const heroContent: HeroContent = hero ?? {
+    id: '',
+    heading: 'Pasiekite savo tikslus su profesionaliu treneriu',
+    subheading: 'Individualios ir grupinės treniruotės, pritaikytos jūsų poreikiams.',
+    cta_text: 'Pradėti dabar',
+    background_image_url: null,
+    created_at: '',
+  }
+
+  return (
+    <main className="min-h-screen bg-background">
+      <Navbar />
+      <HeroSection hero={heroContent} />
+      <PratimaSection exercises={exercises} />
+      <TreniruotesSection trainingTypes={trainingTypes} />
+      <TvarkarastisSection slots={slots} />
+      <Footer />
+    </main>
+  )
+}
