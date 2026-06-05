@@ -46,11 +46,10 @@ export function Navbar() {
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
             ? 'bg-background/90 backdrop-blur-md border-b border-border/50 shadow-lg'
             : 'bg-transparent'
-        }`}
+          }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -60,7 +59,7 @@ export function Navbar() {
                 <Dumbbell className="size-4 text-primary-foreground" />
               </div>
               <span className="text-foreground font-bold text-lg tracking-tight">
-                FitCoach
+                CoachArmandas
               </span>
             </a>
 

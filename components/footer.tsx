@@ -10,7 +10,7 @@ export function Footer() {
             <div className="size-8 bg-primary rounded-lg flex items-center justify-center">
               <Dumbbell className="size-4 text-primary-foreground" />
             </div>
-            <span className="text-foreground font-bold text-lg tracking-tight">FitCoach</span>
+            <span className="text-foreground font-bold text-lg tracking-tight">CoachArmandas</span>
           </div>
 
           {/* Nav links */}
@@ -50,7 +50,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 pt-6 border-t border-border/30 text-center text-muted-foreground text-xs">
-          © {new Date().getFullYear()} FitCoach. Visos teisės saugomos.
+          © {new Date().getFullYear()} CoachArmandas. Visos teisės saugomos.
         </div>
       </div>
     </footer>

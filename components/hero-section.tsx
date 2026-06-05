@@ -1,153 +1,221 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ChevronDown } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import type { HeroContent } from '@/lib/types'
+import { Mail, ChevronDown, Award, Dumbbell, HeartPulse, GraduationCap } from 'lucide-react'
+import Image from 'next/image'
 
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.18, delayChildren: 0.3 },
+    transition: { staggerChildren: 0.14, delayChildren: 0.2 },
   },
 }
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: 'easeOut' } },
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: 'easeOut' } },
 }
 
-type Props = {
-  hero: HeroContent
+const imageVariants = {
+  hidden: { opacity: 0, scale: 0.96 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: 'easeOut', delay: 0.1 } },
 }
 
-export function HeroSection({ hero }: Props) {
+const credentials = [
+  {
+    icon: GraduationCap,
+    label: 'Išsilavinimas',
+    items: ['Kineziterapijos bakalauras', 'Sporto specialisto licencija'],
+  },
+  {
+    icon: Dumbbell,
+    label: 'Specializacija',
+    items: ['Asmeninis treneris', 'Reabilitacija po traumų', 'Sveikatingumo treneris'],
+  },
+  {
+    icon: Award,
+    label: 'Pasiekimai',
+    items: [
+      'Daugkartinis BKI Lietuvos čempionas',
+      'BKI Baltijos šalių čempionas',
+      'Judesių biomechanika — 1 lygis',
+    ],
+  },
+]
+
+export function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Animated background gradient blobs */}
-      <div className="absolute inset-0 z-0">
-        <motion.div
-          animate={{ scale: [1, 1.1, 1], opacity: [0.15, 0.25, 0.15] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary rounded-full blur-[120px]"
-        />
-        <motion.div
-          animate={{ scale: [1.1, 1, 1.1], opacity: [0.1, 0.2, 0.1] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-          className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-primary/60 rounded-full blur-[100px]"
-        />
-        {/* Grid overlay */}
-        <div
-          className="absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)',
-            backgroundSize: '60px 60px',
-          }}
-        />
-      </div>
+    <section className="relative min-h-screen flex items-center bg-background overflow-hidden">
+      {/* Subtle noise texture overlay */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0 opacity-[0.03]"
+        style={{
+          backgroundImage:
+            'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")',
+          backgroundRepeat: 'repeat',
+          backgroundSize: '180px',
+        }}
+      />
 
-      {/* Coach silhouette image placeholder */}
-      <div className="absolute inset-0 z-0 flex items-center justify-end pointer-events-none">
-        <motion.div
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 0.08, x: 0 }}
-          transition={{ duration: 1.2, ease: 'easeOut', delay: 0.5 }}
-          className="w-1/2 h-full bg-gradient-to-l from-primary/30 to-transparent"
-        />
-      </div>
+      {/* Accent glow — top right */}
+      <div className="pointer-events-none absolute -top-32 right-0 w-[600px] h-[600px] rounded-full bg-primary/10 blur-[120px] z-0" />
 
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
-      >
-        {/* Badge */}
-        <motion.div variants={itemVariants}>
-          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-primary text-xs font-semibold uppercase tracking-widest mb-6">
-            <span className="size-1.5 rounded-full bg-primary animate-pulse" />
-            Profesionalus treneris
-          </span>
-        </motion.div>
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 py-20 lg:py-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 
-        {/* Heading */}
-        <motion.h1
-          variants={itemVariants}
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground leading-tight text-balance mb-6"
-        >
-          {hero.heading.split(' ').map((word, i, arr) =>
-            i === arr.length - 1 || i === arr.length - 2 ? (
-              <span key={i} className="text-primary">
-                {word}{i < arr.length - 1 ? ' ' : ''}
+          {/* ── LEFT: Text ── */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="flex flex-col gap-8"
+          >
+            {/* Since badge */}
+            <motion.div variants={itemVariants}>
+              <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                <span className="size-1.5 rounded-full bg-primary inline-block" />
+                Treneris nuo 2023 m.
               </span>
-            ) : (
-              <span key={i}>{word} </span>
-            )
-          )}
-        </motion.h1>
+            </motion.div>
 
-        {/* Subheading */}
-        <motion.p
-          variants={itemVariants}
-          className="text-muted-foreground text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed mb-10 text-pretty"
-        >
-          {hero.subheading}
-        </motion.p>
+            {/* Name */}
+            <motion.div variants={itemVariants}>
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-foreground leading-[1.05] text-balance">
+                Armandas
+              </h1>
+              <p className="mt-3 text-primary text-lg font-medium tracking-wide uppercase">
+                Asmeninis treneris &amp; Kineziterapeutas
+              </p>
+            </motion.div>
 
-        {/* CTAs */}
-        <motion.div
-          variants={itemVariants}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
-        >
-          <Button
-            size="lg"
-            asChild
-            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-base font-semibold rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all"
+            {/* Motto */}
+            <motion.div variants={itemVariants}>
+              <blockquote className="border-l-2 border-primary/50 pl-5">
+                <p className="text-muted-foreground text-base leading-relaxed italic text-pretty">
+                  &ldquo;Jei negali nustoti apie tai galvoti,&nbsp;
+                  nenustok dėl to dirbti.&rdquo;
+                </p>
+              </blockquote>
+            </motion.div>
+
+            {/* Credentials grid */}
+            <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {credentials.map(({ icon: Icon, label, items }) => (
+                <div
+                  key={label}
+                  className="rounded-xl border border-border bg-card p-4 flex flex-col gap-2.5"
+                >
+                  <div className="flex items-center gap-2">
+                    <Icon className="size-4 text-primary shrink-0" />
+                    <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      {label}
+                    </span>
+                  </div>
+                  <ul className="space-y-1">
+                    {items.map((item) => (
+                      <li key={item} className="text-sm text-foreground leading-snug">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </motion.div>
+
+            {/* Contact */}
+            <motion.div variants={itemVariants} className="flex flex-wrap items-center gap-4 pt-1">
+              <a
+                href="mailto:treneris.armandas@gmail.com"
+                className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors group"
+              >
+                <span className="size-8 rounded-full border border-border flex items-center justify-center group-hover:border-primary/50 transition-colors">
+                  <Mail className="size-3.5" />
+                </span>
+                treneris.armandas@gmail.com
+              </a>
+
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Facebook"
+                className="size-8 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/50 transition-colors"
+              >
+                {/* Facebook f icon */}
+                <svg viewBox="0 0 24 24" fill="currentColor" className="size-3.5" aria-hidden="true">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                </svg>
+              </a>
+
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Instagram"
+                className="size-8 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/50 transition-colors"
+              >
+                {/* Instagram camera icon */}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-3.5" aria-hidden="true">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                </svg>
+              </a>
+            </motion.div>
+          </motion.div>
+
+          {/* ── RIGHT: Square image ── */}
+          <motion.div
+            variants={imageVariants}
+            initial="hidden"
+            animate="visible"
+            className="flex justify-center lg:justify-end"
           >
-            <a href="#treniruotes">{hero.cta_text}</a>
-          </Button>
-          <Button
-            variant="outline"
-            size="lg"
-            asChild
-            className="border-border/60 text-foreground hover:bg-secondary px-8 py-6 text-base rounded-xl"
-          >
-            <a href="#tvarkarastis">Žiūrėti tvarkaraštį</a>
-          </Button>
-        </motion.div>
-
-        {/* Stats */}
-        <motion.div
-          variants={itemVariants}
-          className="mt-16 grid grid-cols-3 gap-6 max-w-lg mx-auto"
-        >
-          {[
-            { value: '500+', label: 'Klientų' },
-            { value: '5+', label: 'Metų patirtis' },
-            { value: '98%', label: 'Patenkintų' },
-          ].map((stat) => (
-            <div key={stat.label} className="text-center">
-              <div className="text-2xl font-bold text-primary">{stat.value}</div>
-              <div className="text-xs text-muted-foreground mt-1">{stat.label}</div>
+            <div className="relative w-full max-w-[480px] aspect-square rounded-2xl overflow-hidden border border-border shadow-2xl shadow-black/40">
+              <Image
+                src="/hero.jpg"
+                alt="Armandas — asmeninis treneris"
+                fill
+                sizes="(max-width: 768px) 90vw, 480px"
+                className="object-cover"
+                priority
+              />
+              {/* Bottom caption strip */}
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent px-5 py-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-widest text-primary">
+                      Armandas
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Asmeninis treneris
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <HeartPulse className="size-4 text-primary" />
+                    <span className="text-xs text-muted-foreground">Nuo 2023</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          ))}
-        </motion.div>
-      </motion.div>
+          </motion.div>
+
+        </div>
+      </div>
 
       {/* Scroll indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
+        transition={{ delay: 1.4 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
       >
         <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+          animate={{ y: [0, 7, 0] }}
+          transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <ChevronDown className="size-6 text-muted-foreground" />
+          <ChevronDown className="size-5 text-muted-foreground" />
         </motion.div>
       </motion.div>
     </section>

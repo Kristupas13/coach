@@ -6,6 +6,7 @@ import { TreniruotesSection } from '@/components/treniruotes-section'
 import { TvarkarastisSection } from '@/components/tvarkarastis-section'
 import { Footer } from '@/components/footer'
 import type { HeroContent, Exercise, TrainingType, ScheduleSlot } from '@/lib/types'
+import { PhotoGallery } from '@/components/ui/photo-gallery'
 
 export default async function HomePage() {
   const supabase = await createClient()
@@ -39,7 +40,11 @@ export default async function HomePage() {
   return (
     <main className="min-h-screen bg-background">
       <Navbar />
-      <HeroSection hero={heroContent} />
+      <HeroSection />
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16">
+        <div className="border-t border-border" />
+      </div>
+      <PhotoGallery />
       <PratimaSection exercises={exercises} />
       <TreniruotesSection trainingTypes={trainingTypes} />
       <TvarkarastisSection slots={slots} />

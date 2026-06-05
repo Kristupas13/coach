@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'FitCoach – Profesionalios treniruotės',
+  title: 'CoachArmandas – Profesionalios treniruotės',
   description:
     'Individualios ir grupinės treniruotės su profesionaliu treneriu. Pasiekite savo tikslus šiandien.',
   generator: 'v0.app',
