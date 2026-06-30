@@ -2,6 +2,7 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata } from 'next'
 import { Inter, Geist_Mono } from 'next/font/google'
 import './globals.css'
+import { Navbar } from '@/components/navbar'
 
 const inter = Inter({
   subsets: ['latin', 'latin-ext'],
@@ -15,7 +16,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'CoachArmandas – Profesionalios treniruotės',
+  title: 'ArmCoach – Profesionalios treniruotės',
   description:
     'Individualios ir grupinės treniruotės su profesionaliu treneriu. Pasiekite savo tikslus šiandien.',
   generator: 'v0.app',
@@ -33,10 +34,13 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="lt" className={`${inter.variable} ${geistMono.variable} bg-background`}>
+    <html lang="lt" className={`${inter.variable} ${geistMono.variable} bg-background`} data-scroll-behavior="smooth">
       <body className="font-sans antialiased">
-        {children}
-        {process.env.NODE_ENV === 'production' && <Analytics />}
+        <main className="min-h-screen bg-background">
+          <Navbar />
+          {children}
+          {process.env.NODE_ENV === 'production' && <Analytics />}
+        </main>
       </body>
     </html>
   )

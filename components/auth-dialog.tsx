@@ -2,28 +2,38 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Eye, EyeOff, Loader2, Mail, Lock, User } from 'lucide-react'
+import { Eye, EyeOff, Loader2, Mail, Lock, User, CheckCircle2, XCircle } from 'lucide-react'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { createClient } from '@/lib/supabase/client'
+import { useRouter } from 'next/navigation'
 
 type Mode = 'login' | 'register' | 'forgot'
 
 type Props = {
   open: boolean
   onOpenChange: (open: boolean) => void
+  redirectTo?: string
 }
 
-export function AuthDialog({ open, onOpenChange }: Props) {
+export function AuthDialog({
+  open,
+  onOpenChange,
+  redirectTo,
+}: Props) {
   const [mode, setMode] = useState<Mode>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [name, setName] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
+
+  const router = useRouter()
 
   const reset = () => {
     setError(null)
@@ -33,8 +43,15 @@ export function AuthDialog({ open, onOpenChange }: Props) {
 
   const switchMode = (m: Mode) => {
     setMode(m)
+    setPassword('')
+    setConfirmPassword('')
     reset()
   }
+
+  // Only show mismatch feedback once the user has typed something in confirm field
+  const passwordsMatch = confirmPassword === '' || password === confirmPassword
+  const confirmTouched = confirmPassword.length > 0
+  const canRegister = password === confirmPassword && password.length >= 6
 
   const handleGoogleLogin = async () => {
     setLoading(true)
@@ -62,16 +79,25 @@ export function AuthDialog({ open, onOpenChange }: Props) {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     setLoading(false)
     if (error) {
-      setError(error.message === 'Invalid login credentials'
-        ? 'Neteisingas el. paštas arba slaptažodis.'
-        : error.message)
+      setError(
+        error.message === 'Invalid login credentials'
+          ? 'Neteisingas el. paštas arba slaptažodis.'
+          : error.message,
+      )
     } else {
       onOpenChange(false)
+      if (redirectTo) {
+        router.push(redirectTo)
+      }
     }
   }
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!canRegister) {
+      setError('Slaptažodžiai nesutampa.')
+      return
+    }
     setLoading(true)
     setError(null)
     const supabase = createClient()
@@ -139,7 +165,7 @@ export function AuthDialog({ open, onOpenChange }: Props) {
               <Button
                 type="button"
                 variant="outline"
-                className="w-full border-border/60 text-foreground hover:bg-secondary gap-2 mb-4"
+                className="w-full border-border/60 text-foreground hover:bg-secondary gap-2 mb-4 py-6"
                 onClick={handleGoogleLogin}
                 disabled={loading}
               >
@@ -172,8 +198,14 @@ export function AuthDialog({ open, onOpenChange }: Props) {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -10 }}
               transition={{ duration: 0.2 }}
-              onSubmit={mode === 'login' ? handleLogin : mode === 'register' ? handleRegister : handleForgot}
-              className="flex flex-col gap-4"
+              onSubmit={
+                mode === 'login'
+                  ? handleLogin
+                  : mode === 'register'
+                    ? handleRegister
+                    : handleForgot
+              }
+              className="flex flex-col gap-3"
             >
               {/* Name (register only) */}
               {mode === 'register' && (
@@ -185,7 +217,7 @@ export function AuthDialog({ open, onOpenChange }: Props) {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
-                    className="w-full bg-secondary border border-border/60 rounded-xl px-10 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all"
+                    className="w-full bg-secondary border border-border/60 rounded-xl px-10 py-3.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all"
                   />
                 </div>
               )}
@@ -199,7 +231,7 @@ export function AuthDialog({ open, onOpenChange }: Props) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full bg-secondary border border-border/60 rounded-xl px-10 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all"
+                  className="w-full bg-secondary border border-border/60 rounded-xl px-10 py-3.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all"
                 />
               </div>
 
@@ -214,7 +246,7 @@ export function AuthDialog({ open, onOpenChange }: Props) {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     minLength={6}
-                    className="w-full bg-secondary border border-border/60 rounded-xl px-10 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all pr-10"
+                    className="w-full bg-secondary border border-border/60 rounded-xl px-10 py-3.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all pr-10"
                   />
                   <button
                     type="button"
@@ -226,6 +258,61 @@ export function AuthDialog({ open, onOpenChange }: Props) {
                   </button>
                 </div>
               )}
+
+              {/* Confirm password (register only) */}
+              {mode === 'register' && (
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                  <input
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    placeholder="Pakartokite slaptažodį"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    minLength={6}
+                    className={`w-full bg-secondary border rounded-xl px-10 py-3.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 transition-all pr-10 ${confirmTouched && !passwordsMatch
+                      ? 'border-destructive/60 focus:ring-destructive/40 focus:border-destructive/60'
+                      : confirmTouched && passwordsMatch
+                        ? 'border-primary/60 focus:ring-primary/50 focus:border-primary/50'
+                        : 'border-border/60 focus:ring-primary/50 focus:border-primary/50'
+                      }`}
+                  />
+                  {/* Show/hide toggle */}
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-8 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    aria-label={showConfirmPassword ? 'Slėpti slaptažodį' : 'Rodyti slaptažodį'}
+                  >
+                    {showConfirmPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                  </button>
+                  {/* Match indicator icon */}
+                  {confirmTouched && (
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                      {passwordsMatch ? (
+                        <CheckCircle2 className="size-4 text-primary" />
+                      ) : (
+                        <XCircle className="size-4 text-destructive" />
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Inline mismatch hint */}
+              <AnimatePresence>
+                {mode === 'register' && confirmTouched && !passwordsMatch && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.15 }}
+                    className="text-destructive text-xs -mt-1 pl-1"
+                  >
+                    Slaptažodžiai nesutampa
+                  </motion.p>
+                )}
+              </AnimatePresence>
 
               {/* Forgot password link */}
               {mode === 'login' && (
@@ -243,7 +330,7 @@ export function AuthDialog({ open, onOpenChange }: Props) {
                 <motion.div
                   initial={{ opacity: 0, y: -5 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-destructive/10 border border-destructive/30 rounded-xl px-3 py-2 text-destructive text-sm"
+                  className="bg-destructive/10 border border-destructive/30 rounded-xl px-3 py-2.5 text-destructive text-sm"
                 >
                   {error}
                 </motion.div>
@@ -252,7 +339,7 @@ export function AuthDialog({ open, onOpenChange }: Props) {
                 <motion.div
                   initial={{ opacity: 0, y: -5 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-primary/10 border border-primary/30 rounded-xl px-3 py-2 text-primary text-sm"
+                  className="bg-primary/10 border border-primary/30 rounded-xl px-3 py-2.5 text-primary text-sm"
                 >
                   {success}
                 </motion.div>
@@ -261,8 +348,8 @@ export function AuthDialog({ open, onOpenChange }: Props) {
               {/* Submit */}
               <Button
                 type="submit"
-                disabled={loading}
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-3 rounded-xl font-semibold"
+                disabled={loading || (mode === 'register' && !canRegister)}
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-6 rounded-xl font-semibold mt-1 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
               >
                 {loading ? (
                   <Loader2 className="size-4 animate-spin" />
@@ -278,7 +365,10 @@ export function AuthDialog({ open, onOpenChange }: Props) {
             {mode === 'login' && (
               <p className="text-muted-foreground">
                 Neturite paskyros?{' '}
-                <button onClick={() => switchMode('register')} className="text-primary hover:underline font-medium">
+                <button
+                  onClick={() => switchMode('register')}
+                  className="text-primary hover:underline font-medium"
+                >
                   Registruotis
                 </button>
               </p>
@@ -286,13 +376,19 @@ export function AuthDialog({ open, onOpenChange }: Props) {
             {mode === 'register' && (
               <p className="text-muted-foreground">
                 Jau turite paskyrą?{' '}
-                <button onClick={() => switchMode('login')} className="text-primary hover:underline font-medium">
+                <button
+                  onClick={() => switchMode('login')}
+                  className="text-primary hover:underline font-medium"
+                >
                   Prisijungti
                 </button>
               </p>
             )}
             {mode === 'forgot' && (
-              <button onClick={() => switchMode('login')} className="text-primary hover:underline font-medium">
+              <button
+                onClick={() => switchMode('login')}
+                className="text-primary hover:underline font-medium"
+              >
                 Grįžti į prisijungimą
               </button>
             )}

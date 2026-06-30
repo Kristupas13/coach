@@ -1,4 +1,5 @@
 import { Dumbbell, Globe, Mail, Phone } from 'lucide-react'
+import Link from 'next/link'
 
 export function Footer() {
   return (
@@ -10,7 +11,7 @@ export function Footer() {
             <div className="size-8 bg-primary rounded-lg flex items-center justify-center">
               <Dumbbell className="size-4 text-primary-foreground" />
             </div>
-            <span className="text-foreground font-bold text-lg tracking-tight">CoachArmandas</span>
+            <span className="text-foreground font-bold text-lg tracking-tight">ArmCoach</span>
           </div>
 
           {/* Nav links */}
@@ -20,13 +21,13 @@ export function Footer() {
               { label: 'Treniruotės', href: '#treniruotes' },
               { label: 'Tvarkaraštis', href: '#tvarkarastis' },
             ].map((link) => (
-              <a
+              <Link
                 key={link.href}
                 href={link.href}
                 className="text-muted-foreground hover:text-foreground text-sm transition-colors"
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -37,20 +38,20 @@ export function Footer() {
               { Icon: Mail, label: 'El. paštas' },
               { Icon: Phone, label: 'Telefonas' },
             ].map(({ Icon, label }) => (
-              <a
+              <Link
                 key={label}
                 href="#"
                 aria-label={label}
                 className="size-9 rounded-lg bg-secondary hover:bg-secondary/60 flex items-center justify-center text-muted-foreground hover:text-foreground transition-all"
               >
                 <Icon className="size-4" />
-              </a>
+              </Link>
             ))}
           </div>
         </div>
 
         <div className="mt-8 pt-6 border-t border-border/30 text-center text-muted-foreground text-xs">
-          © {new Date().getFullYear()} CoachArmandas. Visos teisės saugomos.
+          © {new Date().getFullYear()} ArmCoach. Visos teisės saugomos.
         </div>
       </div>
     </footer>

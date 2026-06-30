@@ -5,15 +5,18 @@ import { PratimaSection } from '@/components/pratimai-section'
 import { TreniruotesSection } from '@/components/treniruotes-section'
 import { TvarkarastisSection } from '@/components/tvarkarastis-section'
 import { Footer } from '@/components/footer'
-import type { HeroContent, Exercise, TrainingType, ScheduleSlot } from '@/lib/types'
+import type { HeroContent, TrainingType, ScheduleSlot } from '@/lib/types'
 import { PhotoGallery } from '@/components/ui/photo-gallery'
+import { ProgramosSection } from '@/components/programos-section'
+import { getExercises } from '@/lib/exercises-data'
+import { Exercise } from '@/lib/types/exercises'
 
 export default async function HomePage() {
   const supabase = await createClient()
 
   const [heroRes, exercisesRes, trainingRes, slotsRes] = await Promise.all([
     supabase.from('hero_content').select('*').limit(1).single(),
-    supabase.from('exercises').select('*').order('sort_order'),
+    await getExercises(6),
     supabase.from('training_types').select('*').order('sort_order'),
     supabase
       .from('schedule_slots')
@@ -23,8 +26,9 @@ export default async function HomePage() {
       .order('start_time'),
   ])
 
+
   const hero = heroRes.data as HeroContent | null
-  const exercises = (exercisesRes.data ?? []) as Exercise[]
+  const exercises = (exercisesRes ?? []) as Exercise[];
   const trainingTypes = (trainingRes.data ?? []) as TrainingType[]
   const slots = (slotsRes.data ?? []) as ScheduleSlot[]
 
@@ -38,17 +42,17 @@ export default async function HomePage() {
   }
 
   return (
-    <main className="min-h-screen bg-background">
-      <Navbar />
+    <>
       <HeroSection />
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16">
         <div className="border-t border-border" />
       </div>
-      <PhotoGallery />
+      <ProgramosSection />
       <PratimaSection exercises={exercises} />
       <TreniruotesSection trainingTypes={trainingTypes} />
       <TvarkarastisSection slots={slots} />
+      <PhotoGallery />
       <Footer />
-    </main>
+    </>
   )
 }

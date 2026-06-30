@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
 import type { TrainingType } from '@/lib/types'
+import Link from 'next/link'
 
 const containerVariants = {
   hidden: {},
@@ -84,21 +85,19 @@ export function TreniruotesSection({ trainingTypes }: Props) {
             return (
               <motion.div key={type.id} variants={cardVariants}>
                 <Card
-                  className={`relative flex flex-col h-full border transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl ${
-                    isPremium
-                      ? 'border-primary/50 bg-card hover:shadow-primary/20'
-                      : 'border-border/50 bg-card hover:border-primary/30 hover:shadow-primary/10'
-                  }`}
+                  className={`relative flex flex-col h-full border transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl ${isPremium
+                    ? 'border-primary/50 bg-card hover:shadow-primary/20'
+                    : 'border-border/50 bg-card hover:border-primary/30 hover:shadow-primary/10'
+                    }`}
                 >
                   {/* Popular/Premium badge */}
                   {type.badge_text && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <div className="absolute top-3 left-1/2 -translate-x-1/2">
                       <Badge
-                        className={`px-3 py-1 text-xs font-semibold ${
-                          isPremium
-                            ? 'bg-primary text-primary-foreground border-primary'
-                            : 'bg-secondary text-foreground border-border'
-                        }`}
+                        className={`px-3 py-1 text-xs font-semibold ${isPremium
+                          ? 'bg-primary text-primary-foreground border-primary'
+                          : 'bg-secondary text-foreground border-border'
+                          }`}
                       >
                         {type.badge_text}
                       </Badge>
@@ -154,16 +153,15 @@ export function TreniruotesSection({ trainingTypes }: Props) {
                     </ul>
                   </CardContent>
 
-                  <CardFooter className="pt-0 pb-6">
+                  <CardFooter className="py-6">
                     <Button
-                      className={`w-full font-semibold rounded-xl py-5 ${
-                        isPremium
-                          ? 'bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25'
-                          : 'bg-secondary hover:bg-secondary/80 text-foreground border border-border/60'
-                      }`}
+                      className={`w-full font-semibold rounded-xl py-5 ${isPremium
+                        ? 'bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25'
+                        : 'bg-secondary hover:bg-secondary/80 text-foreground border border-border/60'
+                        }`}
                       asChild
                     >
-                      <a href="#tvarkarastis">Registruotis</a>
+                      <Link href="#tvarkarastis">Registruotis</Link>
                     </Button>
                   </CardFooter>
                 </Card>

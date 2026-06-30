@@ -7,10 +7,12 @@ import { Button } from '@/components/ui/button'
 import { AuthDialog } from '@/components/auth-dialog'
 import type { User } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase/client'
+import Link from 'next/link'
 
 const navLinks = [
-  { label: 'Pratimai', href: '#pratimai' },
+  { label: 'Pratimai', href: '/pratimai' },
   { label: 'Treniruotės', href: '#treniruotes' },
+  { label: 'Programos', href: '#programos' },
   { label: 'Tvarkaraštis', href: '#tvarkarastis' },
 ]
 
@@ -47,33 +49,33 @@ export function Navbar() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-            ? 'bg-background/90 backdrop-blur-md border-b border-border/50 shadow-lg'
-            : 'bg-transparent'
+          ? 'bg-background/90 backdrop-blur-md border-b border-border/50 shadow-lg'
+          : 'bg-transparent'
           }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <a href="#" className="flex items-center gap-2 group">
+            <Link href="/" className="flex items-center gap-2 group">
               <div className="size-8 bg-primary rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
                 <Dumbbell className="size-4 text-primary-foreground" />
               </div>
               <span className="text-foreground font-bold text-lg tracking-tight">
-                CoachArmandas
+                ArmCoach
               </span>
-            </a>
+            </Link>
 
             {/* Desktop nav */}
             <nav className="hidden md:flex items-center gap-8">
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.href}
                   href={link.href}
                   className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors relative group"
                 >
                   {link.label}
                   <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
-                </a>
+                </Link>
               ))}
             </nav>
 
@@ -120,14 +122,14 @@ export function Navbar() {
             >
               <div className="px-4 py-4 flex flex-col gap-4">
                 {navLinks.map((link) => (
-                  <a
+                  <Link
                     key={link.href}
                     href={link.href}
                     className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors py-1"
                     onClick={() => setMobileOpen(false)}
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 ))}
                 {user ? (
                   <Button variant="outline" size="sm" onClick={handleSignOut} className="w-full">
