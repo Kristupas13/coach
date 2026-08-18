@@ -10,10 +10,8 @@ import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 
 const navLinks = [
-  { label: 'Pratimai', href: '/pratimai' },
   { label: 'Treniruotės', href: '#treniruotes' },
   { label: 'Programos', href: '#programos' },
-  { label: 'Tvarkaraštis', href: '#tvarkarastis' },
 ]
 
 export function Navbar() {

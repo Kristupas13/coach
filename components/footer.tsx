@@ -17,9 +17,8 @@ export function Footer() {
           {/* Nav links */}
           <nav className="flex items-center gap-6">
             {[
-              { label: 'Pratimai', href: '#pratimai' },
+              { label: 'Pratimai', href: '/pratimai' },
               { label: 'Treniruotės', href: '#treniruotes' },
-              { label: 'Tvarkaraštis', href: '#tvarkarastis' },
             ].map((link) => (
               <Link
                 key={link.href}
