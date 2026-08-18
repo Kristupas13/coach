@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { ADMIN_TABLES } from '@/lib/admin/tables'
 import { EditableTable } from './editable-table'
 import { HeroEditor } from './hero-editor'
+import { CustomersTable } from './customers-table'
 import type { HeroContent, TrainingType, ScheduleSlot, ExerciseCategory } from '@/lib/types'
 import type { ExerciseRow } from '@/lib/types/exercises'
 
@@ -21,6 +22,7 @@ const TABS = [
   { key: 'schedule_slots', label: ADMIN_TABLES.schedule_slots.label },
   { key: 'exercise_categories', label: ADMIN_TABLES.exercise_categories.label },
   { key: 'exercises', label: ADMIN_TABLES.exercises.label },
+  { key: 'customers', label: 'Klientai' },
 ] as const
 
 export function AdminDashboard({ hero, trainingTypes, scheduleSlots, exerciseCategories, exercises }: Props) {
@@ -54,6 +56,7 @@ export function AdminDashboard({ hero, trainingTypes, scheduleSlots, exerciseCat
       {tab === 'exercises' && (
         <EditableTable tableKey="exercises" rows={exercises} foreignRows={{ exercise_categories: exerciseCategories }} />
       )}
+      {tab === 'customers' && <CustomersTable />}
     </div>
   )
 }
