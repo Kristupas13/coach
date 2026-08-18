@@ -29,6 +29,13 @@ export type TrainingType = {
   created_at: string
 }
 
+export type ExerciseCategory = {
+  id: string
+  name: string
+  position: number
+  created_at: string
+}
+
 export type ScheduleSlot = {
   id: string
   slot_date: string

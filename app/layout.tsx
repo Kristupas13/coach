@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Inter, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { Navbar } from '@/components/navbar'
+import { AdminDock } from '@/components/admin-dock'
 
 const inter = Inter({
   subsets: ['latin', 'latin-ext'],
@@ -39,6 +40,7 @@ export default function RootLayout({
         <main className="min-h-screen bg-background">
           <Navbar />
           {children}
+          <AdminDock />
           {process.env.NODE_ENV === 'production' && <Analytics />}
         </main>
       </body>

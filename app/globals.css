@@ -104,3 +104,14 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: oklch(0.65 0.22 25);
 }
+
+/* Admin editable-table: single column of stacked cards on mobile,
+   the configured multi-column grid from --admin-grid-cols on larger screens. */
+.admin-row-grid {
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) {
+  .admin-row-grid {
+    grid-template-columns: var(--admin-grid-cols);
+  }
+}

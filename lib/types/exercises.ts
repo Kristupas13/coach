@@ -16,7 +16,7 @@ export function canAccessTier(
 }
 
 // Matches the `exercises` table row exactly
-export interface ExerciseRow {
+export type ExerciseRow = {
   id: string
   title: string
   subtitle: string | null
